@@ -15,18 +15,19 @@ node{
 	        }
 	    }
    stage('Build Docker Image'){
-   sh 'docker build -t saidamo/myweb:0.0.2 .'
+   sh 'docker build -t prasikumar/myweb:0.0.2 .'
    }
    stage('Docker Image Push'){
    withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-   sh "docker login -u saidamo -p ${dockerPassword}"
+   sh "docker login -u prasikumar -p ${dockerPassword}"
     }
-   sh 'docker push saidamo/myweb:0.0.2'
+   sh 'docker push prasikumar/myweb:0.0.2'
    }
    stage('Nexus Image Push'){
-   sh "docker login -u admin -p admin123 13.232.193.72:8083"
-   sh "docker tag saidamo/myweb:0.0.2 13.232.193.72:8083/damo:1.0.0"
-   sh 'docker push 13.232.193.72:8083/damo:1.0.0'
+	   withCredentials([string(credentialsId: 'nexuspass', variable: 'nexuspassword')])
+          sh "docker login -u admin -p ${nexuspassword} 52.66.253.65:8083"
+   sh "docker tag prasikumar/myweb:0.0.2 52.66.253.65:8083/kumar:1.0.0"
+    sh 'docker push 52.66.253.65:8083/damo:1.0.0'
    }
    stage('Remove Previous Container'){
 	try{
